@@ -52,4 +52,9 @@ class PupilsDao extends Dao
         }
         return $this->getPagingResult($select, $limits, 'p');
     }
+
+    public function isUsedEmail($email)
+    {
+        return (bool)$this->_doctrine->getRepository('AppBundle:PupilsEntity')->findOneByEmail($email);
+    }
 }

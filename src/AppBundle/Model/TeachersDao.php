@@ -57,4 +57,14 @@ class TeachersDao extends Dao
 
         return $this->getPagingResult($select, $limits, 't');
     }
+
+    public function isUsedName($name)
+    {
+        if (empty($name)) {
+            return true;
+        } else {
+            return (bool)$this->_doctrine->getRepository('AppBundle:TeachersEntity')->findOneByName($name);
+        }
+    }
+
 }

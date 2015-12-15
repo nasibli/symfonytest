@@ -16,11 +16,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class TeachersEntity
 {
-    private $_doctrine = null;
-    public function __construct($doctrine)
-    {
-        $this->_doctrine = $doctrine;
-    }
 
     /**
      * @ORM\Column(type="integer")
@@ -63,18 +58,6 @@ class TeachersEntity
      * @ORM\Column(type="smallint")
      */
     protected $only_april;
-
-    /*
-     * Assert\IsTrue(message = "Данное имя уже используется, введите другое") - не работает (переделал)
-     * */
-    public function isUsedName($name)
-    {
-        if (empty($name)) {
-            return true;
-        } else {
-            return (bool)$this->_doctrine->getRepository('AppBundle:TeachersEntity')->findOneByName($name);
-        }
-    }
 
     /**
      * Get id

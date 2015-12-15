@@ -14,19 +14,21 @@ use Common\Manager;
 
 class TeachersManager extends Manager
 {
-    private $_doctrine       = null;
-    private $_container      = null;
+    private $_doctrine         = null;
+    private $_teachersDao      = null;
+    private $_teacherPupilsDao = null;
 
-    public function __construct ($doctrine, $container)
+    public function __construct ($doctrine, $teachersDao, $teacherPupilsDao)
     {
-        $this->_doctrine  = $doctrine;
-        $this->_container = $container;
+        $this->_doctrine         = $doctrine;
+        $this->_teachersDao      = $teachersDao;
+        $this->_teacherPupilsDao = $teacherPupilsDao;
     }
 
     public function save ($post, $validator) {
         $res = ['success' => true, 'errors' => []];
 
-        $teacher = $this->_container->get('teachersDao')->setValues(new TeachersEntity($this->_doctrine), $post);
+        $teacher = $this->_teachersDao->setValues(new TeachersEntity(), $post);
 
         $errors = $this->validate($teacher, $validator);
         if (count($errors)>0) {
@@ -35,7 +37,7 @@ class TeachersManager extends Manager
             return $res;
         }
 
-        $this->_container->get('teachersDao')->update($teacher);
+        $this->_teachersDao->update($teacher);
         return $res;
     }
 
@@ -47,7 +49,7 @@ class TeachersManager extends Manager
             $res = $this->getErrors($errors);
             return $res;
         }
-        if ($teacher->isUsedName($teacher->getName())) {
+        if ($this->_teachersDao->isUsedName($teacher->getName())) {
             $res['name'] = 'Имя уже используется, введите другое имя';
             return $res;
         }
@@ -56,7 +58,7 @@ class TeachersManager extends Manager
 
     public function getAllForPaging($filters, $orders, $limits)
     {
-        return $this->_container->get('teachersDao')->getAllForPaging($filters, $orders, $limits);
+        return $this->_teachersDao->getAllForPaging($filters, $orders, $limits);
     }
 
     public function addPupils($post, $validator)
@@ -77,9 +79,7 @@ class TeachersManager extends Manager
             $pupilIds[] = $pupil;
         }
         $teacherId = $post['id'];
-        //$teacherPupils = new TeacherPupils($this->_doctrine);
-        //$exPupils = $teacherPupils->getExists($teacherId, $pupilIds);
-        $exPupils = $this->_container->get('teacherPupilsDao')->getExists($teacherId, $pupilIds);
+        $exPupils = $this->_teacherPupilsDao->getExists($teacherId, $pupilIds);
 
         $sqlInsert = $this->generatePupilsInsertSql($post['pupils'], $exPupils,  $teacherId);
 
@@ -87,10 +87,9 @@ class TeachersManager extends Manager
             $this->_doctrine->getEntityManager()->getConnection()->executeUpdate($sqlInsert);
         }
 
-        //$stat = $teacherPupils->getStats($teacherId);
-        $stat = $this->_container->get('teacherPupilsDao')->getStats($teacherId);
+        $stat = $this->_teacherPupilsDao->getStats($teacherId);
         if ($stat) {
-            $this->_container->get('teachersDao')->updateStat($stat[0]['cnt'], $stat[0]['cnt']==$stat[0]['apr_cnt'] ? 1 : 0, $teacherId);
+            $this->_teachersDao->updateStat($stat[0]['cnt'], $stat[0]['cnt']==$stat[0]['apr_cnt'] ? 1 : 0, $teacherId);
         }
 
         return $res;

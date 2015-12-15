@@ -18,9 +18,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 class PupilsEntity
 {
     private $_doctrine = null;
-    public function __construct($doctrine)
+    public function __construct()
     {
-        $this->_doctrine = $doctrine;
         $this->teacher_pupils = new ArrayCollection();
     }
 
@@ -72,16 +71,6 @@ class PupilsEntity
      * )
      */
     protected $level_id;
-
-
-    /*
-     * Assert\IsTrue(message = "Данная почта уже используется, введите другое") - не работает (переделал)
-     * */
-    public function isUsedEmail($email)
-    {
-        return (bool)$this->_doctrine->getRepository('AppBundle:PupilsEntity')->findOneByEmail($email);
-    }
-
 
     /**
      * Get id

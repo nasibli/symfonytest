@@ -9,10 +9,10 @@ services:
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
     teacher:
         class: AppBundle\Model\TeachersManager
-        arguments:  ["@doctrine", "@service_container"]
+        arguments:  ["@doctrine", "@teachersDao", "@teacherPupilsDao"]
     pupil:
         class: AppBundle\Model\PupilsManager
-        arguments:  ["@doctrine", "@service_container"]
+        arguments:  ["@doctrine", "@pupilsDao"]
     pupilsDao:
         class: AppBundle\Model\PupilsDao
         arguments:  ["@doctrine"]
