@@ -1,17 +1,38 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: nasibli
+ * Date: 15.12.2015
+ * Time: 14:04
+ */
 
-namespace AppBundle\Entity;
+namespace AppBundle\Model;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Query\Expr;
-use Lib;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="teacher_pupils")
  */
-class TeacherPupils extends Lib\Entity
+class TeacherPupilsEntity
 {
+    public function __construct($doctrine)
+    {
+        $this->pupils = new ArrayCollection();
+        $this->_doctrine = $doctrine;
+    }
+
+
+    /**
+     * @ORM\ManyToOne(targetEntity="PupilsEntity")
+     * @ORM\JoinColumn(name="pupil_id", referencedColumnName="id")
+     */
+    protected $pupils;
+
+    private $_doctrine = null;
+
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
@@ -91,4 +112,29 @@ class TeacherPupils extends Lib\Entity
     {
         return $this->pupil_id;
     }
+
+    /**
+     * Set bornApril
+     *
+     * @param integer $bornApril
+     *
+     * @return TeacherPupils
+     */
+    public function setBornApril($bornApril)
+    {
+        $this->born_april = $bornApril;
+
+        return $this;
+    }
+
+    /**
+     * Get bornApril
+     *
+     * @return integer
+     */
+    public function getBornApril()
+    {
+        return $this->born_april;
+    }
+
 }

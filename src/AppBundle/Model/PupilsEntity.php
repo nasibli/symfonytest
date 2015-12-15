@@ -1,16 +1,21 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: nasibli
+ * Date: 15.12.2015
+ * Time: 11:17
+ */
 
-namespace AppBundle\Entity;
+namespace AppBundle\Model;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Query\Expr;
 use Doctrine\Common\Collections\ArrayCollection;
-use Lib;
+
 /**
  * @ORM\Entity
  * @ORM\Table(name="Pupils")
  */
-class Pupils extends Lib\Entity
+class PupilsEntity
 {
     private $_doctrine = null;
     public function __construct($doctrine)
@@ -20,7 +25,7 @@ class Pupils extends Lib\Entity
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="TeacherPupils", mappedBy="pupils")
+     * @ORM\OneToMany(targetEntity="TeacherPupilsEntity", mappedBy="pupils")
      */
     protected $teacher_pupils;
 
@@ -74,7 +79,7 @@ class Pupils extends Lib\Entity
      * */
     public function isUsedEmail($email)
     {
-        return (bool)$this->_doctrine->getRepository('AppBundle:Pupils')->findOneByEmail($email);
+        return (bool)$this->_doctrine->getRepository('AppBundle:PupilsEntity')->findOneByEmail($email);
     }
 
 
@@ -182,31 +187,5 @@ class Pupils extends Lib\Entity
     public function getLevelId()
     {
         return $this->level_id;
-    }
-
-    public function getAllForPaging ($filters, $orders, $limits) {
-        $select = $this->_doctrine->getManager()->createQueryBuilder();
-        $select->select('p')
-            ->from('AppBundle:Pupils', 'p');
-
-        if (isset($filters['search']) && !empty($filters['search'])) {
-            $select->andWhere('p.name like :search')->setParameter('search', $filters['search'].'%');
-        }
-
-        if (isset($filters['date_birth_from']) && $filters['date_birth_from']) {
-            $select->andWhere('p.date_birth >= :date_birth_from')->setParameter('date_birth_from', $filters['date_birth_from']);
-        }
-
-        if (isset($filters['date_birth_to']) && $filters['date_birth_to']) {
-            $select->andWhere('p.date_birth <= :date_birth_to')->setParameter('date_birth_to', $filters['date_birth_to']);
-        }
-        if ($orders) {
-            $select->orderBy('p.'.$orders['sort'], $orders['dir']);
-        }
-        if (isset($filters['id']) && intval($filters['id']) != 0) {
-            $select->innerJoin('p.teacher_pupils', 'tp');
-            $select->andWhere('tp.teacher_id=:id')->setParameter('id',$filters['id']);
-        }
-        return $this->getPagingResult($select, $limits, 'p');
     }
 }

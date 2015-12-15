@@ -6,48 +6,54 @@
  * Time: 10:22
  */
 
-namespace AppBundle\Manager;
+namespace AppBundle\Model;
 
-use AppBundle\Entity\Pupils;
-use Lib\Manager;
-use Lib\DateTime;
+use AppBundle\Model\PupilsEntity;
+use Common\Manager;
+use Common\DateTime;
 
 class PupilsManager extends Manager
 {
-    private $_pupilsEntity = null;
+
     private $_doctrine       = null;
 
-    public function __construct ($doctrine)
+    public function __construct ($doctrine, $container)
     {
-        $this->_pupilsEntity = new Pupils($doctrine);
         $this->_doctrine = $doctrine;
+        $this->_container = $container;
     }
 
     public function save($post, $validator)
     {
         $res = ['success' => true, 'errors' => []];
 
-        $pupil = new Pupils($this->_doctrine);
+        $post['date_birth'] = strtotime($post['date_birth']);
 
-        $pupil->setName($post['name']);
-        $pupil->setEmail($post['email']);
-        $pupil->setDateBirth(strtotime($post['date_birth']));
-        $pupil->setLevelId($post['level_id']);
+        $pupil = $this->_container->get('pupilsDao')->setValues(new PupilsEntity($this->_doctrine), $post);
+        $errors = $this->validate($pupil, $validator);
+        if (count($errors) > 0) {
+            $res['success'] = false;
+            $res['errors'] = $errors;
+            return $res;
+        }
+
+        $this->_container->get('pupilsDao')->update($pupil);
+        return $res;
+    }
+
+    private function validate(PupilsEntity $pupil, $validator)
+    {
+        $res = [];
 
         $errors = $validator->validate($pupil);
         if (count ($errors) > 0) {
-            $res['success'] = false;
-            $res['errors'] = $this->getErrors($errors);
+            $res = $this->getErrors($errors);
             return $res;
         }
-        if ($pupil->isUsedEmail($post['email'])) {
-            $res['success'] = false;
-            $res['errors']['email'] = 'Данная электронная почта уже используется, введите другую почту';
+        if ($pupil->isUsedEmail($pupil->getEmail())) {
+            $res['email'] = 'Данная электронная почта уже используется, введите другую почту';
             return $res;
         }
-        $em = $this->_doctrine->getManager();
-        $em->persist($pupil);
-        $em->flush();
         return $res;
     }
 
@@ -60,7 +66,7 @@ class PupilsManager extends Manager
             $filters['date_birth_to'] =  strtotime(DateTime::dateRangeEndToMySql($filters['date_birth_to']));
         }
 
-        $items = $this->_pupilsEntity->getAllForPaging($filters, $orders, $limits);
+        $items = $this->_container->get('pupilsDao')->getAllForPaging($filters, $orders, $limits);
         foreach ($items['data'] as &$item) {
             $item['date_birth'] = DateTime::unixToString($item['date_birth'], DateTime::formatDDMMYYYYdot);
         }

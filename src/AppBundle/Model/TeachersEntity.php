@@ -1,16 +1,20 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: nasibli
+ * Date: 15.12.2015
+ * Time: 12:42
+ */
 
-namespace AppBundle\Entity;
+namespace AppBundle\Model;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Query\Expr;
-use Lib;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="Teachers")
  */
-class Teachers extends Lib\Entity
+class TeachersEntity
 {
     private $_doctrine = null;
     public function __construct($doctrine)
@@ -68,7 +72,7 @@ class Teachers extends Lib\Entity
         if (empty($name)) {
             return true;
         } else {
-            return (bool)$this->_doctrine->getRepository('AppBundle:Teachers')->findOneByName($name);
+            return (bool)$this->_doctrine->getRepository('AppBundle:TeachersEntity')->findOneByName($name);
         }
     }
 
@@ -201,25 +205,4 @@ class Teachers extends Lib\Entity
     {
         return $this->only_april;
     }
-
-    public function getAllForPaging ($filters, $orders, $limits) {
-        $select = $this->_doctrine->getManager()->createQueryBuilder();
-        $select->select('t')
-            ->from('AppBundle:Teachers', 't');
-
-        if (isset($filters['search']) && !empty($filters['search'])) {
-            $select->andWhere('t.name like :search')->setParameter('search', $filters['search'].'%');
-        }
-        if (isset($filters['only_april']) && $filters['only_april'] == 1) {
-            $select->andWhere( 't.only_april=1' );
-        } else {
-            $select->andWhere('t.only_april in (1,0)');
-        }
-        if ($orders) {
-            $select->orderBy('t.'.$orders['sort'], $orders['dir']);
-        }
-
-        return $this->getPagingResult($select, $limits, 't');
-    }
-
 }

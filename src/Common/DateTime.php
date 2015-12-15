@@ -1,6 +1,6 @@
 <?php
 
-namespace Lib;
+namespace Common;
 
 class DateTime
 {

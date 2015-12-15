@@ -6,10 +6,10 @@
  * Time: 18:41
  */
 
-namespace Lib;
+namespace Common;
 use Doctrine\ORM\Query\Expr;
 
-class Entity
+class Dao
 {
     public function applyLimits($select, $limits) {
         if ($limits) {
@@ -43,5 +43,12 @@ class Entity
             $res[$item[$keyField]] = $item[$valueField];
         }
         return $res;
+    }
+
+    public function update($entity)
+    {
+        $em = $this->_doctrine->getManager();
+        $em->persist($entity);
+        $em->flush();
     }
 }

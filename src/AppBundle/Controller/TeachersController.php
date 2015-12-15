@@ -4,10 +4,10 @@ namespace AppBundle\Controller;
 
 use AppBundle\AppBundle;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Lib\AppController;
+use Common\AppController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use AppBundle\Entity\TeacherPupils;
+
 
 
 class TeachersController extends AppController
