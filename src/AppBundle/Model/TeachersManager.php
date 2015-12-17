@@ -58,7 +58,12 @@ class TeachersManager extends Manager
 
     public function getAllForPaging($filters, $orders, $limits)
     {
-        return $this->_teachersDao->getAllForPaging($filters, $orders, $limits);
+        $items = $this->_teachersDao->getAllForPaging($filters, $orders, $limits);
+        foreach ($items['data'] as &$item) {
+            $item['gender'] = $item['gender'] == 1 ? 'Мужской' : 'Женский';
+            $item['only_april'] = $item['only_april'] == 1 ? 'Да' : 'Нет';
+        }
+        return $items;
     }
 
     public function addPupils($post, $validator)

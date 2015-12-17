@@ -68,8 +68,10 @@ class PupilsManager extends Manager
         }
 
         $items = $this->_pupilsDao->getAllForPaging($filters, $orders, $limits);
+        $levels = [1=>'A1', 2=>'A2', 3=>'B1', 4=>'B2', 5=>'A1', 6=>'A2'];
         foreach ($items['data'] as &$item) {
             $item['date_birth'] = DateTime::unixToString($item['date_birth'], DateTime::formatDDMMYYYYdot);
+            $item['level_id'] = $levels[$item['level_id']];
         }
         return $items;
     }

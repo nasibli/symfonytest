@@ -1,0 +1,42 @@
+<div class="clearfix"></div>
+<div id="page-title-wrapper" class="row">
+    <div class="page-title col-lg-12">
+        <h3> Добавить учителя </h3>
+        <br/>
+    </div>
+</div>
+<br/>
+<form class="form-horizontal" name ="teachForm" novalidate ng-controller="TeacherController as teachCtrl">
+    <div class="form-group">
+        <label for="name" class="col-sm-2 control-label">Имя</label>
+        <div class="col-lg-6">
+            <input ng-model="teachCtrl.teacher.name" name="name" id="name" type="text" class="form-control"
+                   placeholder="Имя" ng-required="true">
+        </div>
+        <span class="help-block" ng-show="teachForm.name.$touched && teachForm.name.$error.required">{{teachCtrl.errMsgs.name}}</span>
+    </div>
+    <div class="form-group">
+        <label for="phone" class="col-sm-2 control-label">Телефон</label>
+        <div class="col-lg-6">
+            <input ng-model="teachCtrl.teacher.phone" name="phone" id="phone" type="text" class="form-control"
+                   placeholder="Телефон" ng-required="true">
+        </div>
+        <span class="help-block" ng-show="teachForm.phone.$touched && teachForm.phone.$error.required">{{teachCtrl.errMsgs.phone}}</span>
+    </div>
+    <div class="form-group">
+        <label for="gender" class="col-sm-2 control-label">Пол</label>
+        <div class="col-lg-6">
+            <select ng-model="teachCtrl.teacher.gender" name="gender" id="gender" class="form-control"
+                    placeholder="Пол" >
+                <option selected value="1">Мужской</option>
+                <option value="2">Женский</option>
+            </select>
+        </div>
+        <span class="help-block" ng-show="teachForm.gender.$touched && teachForm.gender.$error.required">{{teachCtrl.errMsgs.gender}}</span>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-lg-6">
+            <button type="submit" ng-disabled="!teachForm.$valid" ng-click="teachCtrl.save()" class="btn btn-default">Добавить</button>
+        </div>
+    </div>
+</form>

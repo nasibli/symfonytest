@@ -29,9 +29,12 @@ class PupilsController extends AppController
     public function listAction(Request $request)
     {
         $req = $request->request;
-        $filters = $this->getFiltersFromPost(['search', 'date_birth_from', 'date_birth_to', 'id'],$req);
-        $orders = $this->getOrdersFromPost('id', 'DESC',$req);
-        $limits = $this->getLimitsFromPost(0,50,$req);
+        //$filters = $this->getFiltersFromPost(['search', 'date_birth_from', 'date_birth_to', 'id'],$req);
+        /*$orders = $this->getOrdersFromPost('id', 'DESC',$req);
+        $limits = $this->getLimitsFromPost(0,50,$req);*/
+        $filters = $this->getFiltersFromContent(['search', 'date_birth_from', 'date_birth_to', 'id'], $request);
+        $orders = $this->getParamsFromContent($request, ['sort','dir']);
+        $limits = $this->getLimitsFromContent($request);
         $res = $this->get('pupil')->getAllForPaging($filters, $orders, $limits);
         return new JsonResponse( array('res' => $res));
     }

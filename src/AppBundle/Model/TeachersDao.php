@@ -23,7 +23,7 @@ class TeachersDao extends Dao
     {
         $teacher->setName($data['name']);
         $teacher->setPhone($data['phone']);
-        $teacher->setGender($data['genderId']);
+        $teacher->setGender($data['gender']);
         $teacher->setPupilCount(0);
         $teacher->setOnlyApril(0);
         return $teacher;

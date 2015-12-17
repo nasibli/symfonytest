@@ -1,0 +1,53 @@
+<div class="clearfix"></div>
+<div id="page-title-wrapper" class="row">
+    <div class="page-title col-lg-12">
+        <h3> Добавить ученика </h3>
+        <br/>
+    </div>
+</div>
+<br/>
+<form class="form-horizontal" name ="pupilForm" novalidate ng-controller="PupilController as pupilCtrl">
+    <div class="form-group">
+        <label for="name" class="col-sm-2 control-label">Имя</label>
+        <div class="col-lg-6">
+            <input ng-model="pupilCtrl.pupil.name" name="name" id="name" type="text" class="form-control"
+                   placeholder="Имя" ng-required="true" ng-required="true">
+        </div>
+        <span class="help-block" ng-show="pupilForm.name.$touched && pupilForm.name.$error.required">{{pupilCtrl.errMsgs.name}}</span>
+    </div>
+    <div class="form-group">
+        <label for="email" class="col-sm-2 control-label">Почта</label>
+        <div class="col-lg-6">
+            <input ng-model="pupilCtrl.pupil.email" name="email" id="email" type="email" class="form-control"
+                   placeholder="Почта" ng-required="true">
+        </div>
+        <span class="help-block" ng-show="pupilForm.email.$touched && pupilForm.email.$error.required">{{pupilCtrl.errMsgs.name}}</span>
+    </div>
+    <div class="form-group">
+        <label for="date_birth" class="col-sm-2 control-label">Дата рождения</label>
+        <div class="col-lg-6">
+            <input ng-model="pupilCtrl.pupil.date_birth" name="date_birth" id="date_birth" type="text" class="form-control"
+                   placeholder="Дата рождения" ng-required="true">
+        </div>
+        <span class="help-block" ng-show="pupilForm.date_birth.$touched && pupilForm.date_birth.$error.required">{{pupilCtrl.errMsgs.date_birth}}</span>
+    </div>
+    <div class="form-group">
+        <label for="level_id" class="col-sm-2 control-label">Уровень</label>
+        <div class="col-lg-6">
+            <select ng-model="pupilCtrl.pupil.level_id" name="level_id" id="level_id" class="form-control" ng-required="true">
+                <option selected value="1">A1</option>
+                <option value="2">A2</option>
+                <option selected value="3">B1</option>
+                <option value="4">B2</option>
+                <option selected value="5">C1</option>
+                <option value="6">C2</option>
+            </select>
+        </div>
+        <span class="help-block" ng-show="pupilForm.level_id.$touched && pupilForm.level_id.$error.required">{{pupilCtrl.errMsgs.level_id}}</span>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-lg-6">
+            <button type="submit" ng-disabled="!pupilForm.$valid" ng-click="pupilCtrl.save()" class="btn btn-default">Добавить</button>
+        </div>
+    </div>
+</form>

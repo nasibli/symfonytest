@@ -35,8 +35,11 @@ class TeachersController extends AppController
     {
         $req = $request->request;
         $filters = $this->getFiltersFromPost(array('search', 'only_april'),$req);
-        $orders = $this->getOrdersFromPost('id', 'asc',$req);
-        $limits = $this->getLimitsFromPost(0,50,$req);
+        //$orders = $this->getOrdersFromPost('id', 'asc',$req);
+        //$limits = $this->getLimitsFromPost(0,50,$request);
+
+        $orders = $this->getParamsFromContent($request, ['sort','dir']);
+        $limits = $this->getLimitsFromContent($request);
         $res = $this->get('teacher')->getAllForPaging($filters, $orders, $limits);
         return new JsonResponse( array('res' => $res));
     }

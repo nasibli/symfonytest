@@ -17,7 +17,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class PupilsEntity
 {
-    private $_doctrine = null;
     public function __construct()
     {
         $this->teacher_pupils = new ArrayCollection();
